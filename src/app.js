@@ -43,7 +43,7 @@ app.use('/v1', routes);
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {
  const error = new Error('Not found');
- error.status(404);
+ error.status(httpStatus.NOT_FOUND);
  next(error);
 });
 
