@@ -7,7 +7,6 @@ const cors = require('cors');
 const httpStatus = require('http-status');
 const { authLimiter } = require('./middlewares/rateLimiter');
 const routes = require('./routes/v1');
-const ApiError = require('./utils/ApiError');
 const config= require('./config/config')
 
 const app = express();
@@ -44,13 +43,13 @@ app.use('/v1', routes);
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {
  const error = new Error('Not found');
- error.status(400);
+ error.status(404);
  next(error);
 });
 
 
 app.use((error,req, res, next) => {
-  res.status(error.status || 500);
+  res.status(error.status || httpStatus.INTERNAL_SERVER_ERROR);
   res.json({
       status:error.status,
       message: error.message
