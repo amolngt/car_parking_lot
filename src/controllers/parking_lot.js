@@ -46,14 +46,16 @@ const getParkingStatus = catchAsync( (req, res) => {
 
 const addVehical= catchAsync((req,res)=>{
   try{
+    let k=0
     let status = get_parking_status(null);
     let typeof_vehical_status= status[0][req.body.type].data;
-    for (let i = 1; i <= typeof_vehical_status.length; i++) {
+    for (let i = 0; i < typeof_vehical_status.length; i++) {
       if(typeof_vehical_status[i] != null && i === (status[0][req.body.type].size)-1){
         throw new ApiError(httpStatus.NOT_FOUND, req.body.type +' Full');
       }
       if(typeof_vehical_status[i] == null){
-          typeof_vehical_status[i]={plot_no:req.body.type+"-"+(i),ticket:req.body.type+"_"+req.body.number,number:req.body.number,date_time: new Date()};
+          k=i+1
+          typeof_vehical_status[i]={plot_no:req.body.type+"-"+(k),ticket:req.body.type+"_"+req.body.number,number:req.body.number,date_time: new Date()};
           break;
       }
     }
@@ -124,7 +126,7 @@ const getSlotByTicket = catchAsync( (req, res) => {
 
 const findAllAvailableSlots = catchAsync( (req, res) => {
   try{
-    let arr=[],set_all=[];
+    let arr={},set_all=[];
     let data = get_parking_status(null);
     let typeof_vehical_status= data[0];
     for (let element of Object.keys(typeof_vehical_status)) {
@@ -150,7 +152,7 @@ const findAllAvailableSlots = catchAsync( (req, res) => {
 
 const findAllAllocatedSlots = catchAsync( (req, res) => {
   try{
-    let arr=[],set_all=[];
+    let arr={},set_all=[];
     let data = get_parking_status(null);
     let typeof_vehical_status= data[0];
     for (let element of Object.keys(typeof_vehical_status)) {
